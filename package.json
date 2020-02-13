@@ -1,0 +1,26 @@
+{
+  "name": "wx-station",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Weather station HUD and public API",
+  "scripts": {
+    "dstart": "DEBUG=wx-station:* ./bin/www",
+    "start": "node ./bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wsi-wx-station/wx-station.git"
+  },
+  "keywords": [
+    "weather",
+    "express",
+    "api"
+  ],
+  "author": "Karl Stolley <karl.stolley@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wsi-wx-station/wx-station/issues"
+  },
+  "homepage": "https://github.com/wsi-wx-station/wx-station#readme"
+}
