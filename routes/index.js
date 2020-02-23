@@ -1,9 +1,13 @@
 var express = require('express');
+var wxData = require('../lib/wx-data');
+
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'WX Station' });
+router.get('/', async function(req, res, next) {
+  wxData.helloThere();
+  let data = await wxData.dummyData();
+  res.render('index', data);
 });
 
 module.exports = router;
