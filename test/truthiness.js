@@ -1,4 +1,4 @@
-const assert = require('assert');
+const assert = require('assert').strict;
 
 describe('The truth', function() {
   it('should always be true', function() {
