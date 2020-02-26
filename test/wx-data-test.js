@@ -18,3 +18,13 @@ describe('returnDummyData', function() {
       });
   });
 });
+
+/* Testing a live response from the GitHub API */
+describe('gitHubData', function() {
+  it('should return a known API response object', function() {
+    return wx.gitHubData()
+      .then(function(data) {
+        assert.equal(data.name, "Prof. Karl Stolley", "should be 'Prof. Karl Stolley'");
+      });
+  });
+});
