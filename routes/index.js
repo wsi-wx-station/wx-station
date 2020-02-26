@@ -4,7 +4,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-  let async_data = await wx.returnDummyData();
+  let async_data = await wx.gitHubData();
   res.render('index', async_data);
 });
 
