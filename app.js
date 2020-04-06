@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var fs = require('fs').promises;
 var path = require('path');
 // No need to load up cookies
 // var cookieParser = require('cookie-parser');
@@ -63,11 +64,18 @@ api.on('connect', function() {
 api.on('subscribed', function(ddata) {
   // console.log(data.devices[0].lastData);
   var data = ddata.devices[0].lastData;
-  console.log(`At ${shortDate(data.date)} - ${data.tempf}℉, wind out of the ${cardinalDirection(data.winddir)} at ${data.windspeedmph} mph`);
+  //console.log(`At ${shortDate(data.date)} - ${data.tempf}℉, wind out of the ${cardinalDirection(data.winddir)} at ${data.windspeedmph} mph`);
+  fs.writeFile('var/wx.json', JSON.stringify(data))
+    .then(function(){
+      console.log('Weather data written to file');
+    })
+    .catch(function(e){
+      console.error(e);
+    });
 });
 
 api.on('data', function(data){
-  console.log(`At ${shortDate(data.date)} - ${data.tempf}℉, wind out of the ${cardinalDirection(data.winddir)} at ${data.windspeedmph} mph`);
+  //console.log(`At ${shortDate(data.date)} - ${data.tempf}℉, wind out of the ${cardinalDirection(data.winddir)} at ${data.windspeedmph} mph`);
 });
 
 api.subscribe(apiKey);
