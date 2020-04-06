@@ -1,6 +1,8 @@
 var createError = require('http-errors');
 var express = require('express');
 var fs = require('fs').promises;
+var server = require('http').Server();
+var io = require('socket.io')(server);
 var path = require('path');
 // No need to load up cookies
 // var cookieParser = require('cookie-parser');
@@ -20,6 +22,9 @@ const api = new AWApi({
   apiKey: apiKey,
   applicationKey: process.env.AMBIENT_WEATHER_APP_KEY
 });
+
+// Set socket server to listen on :3001
+server.listen(3001);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -80,5 +85,11 @@ api.on('data', function(data){
 
 api.subscribe(apiKey);
 
+io.on('connection', function(socket){
+  socket.emit('news', { greet: 'Hello, world!'});
+  socket.on('backactcha', function(data) {
+    console.log(data);
+  });
+});
 
 module.exports = app;
