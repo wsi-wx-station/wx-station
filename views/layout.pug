@@ -13,3 +13,6 @@ html(lang='en')
         console.log(data.greet);
         socket.emit('backactcha', { dude: "I am socketed up, brah"});
       });
+      socket.on('weather', function(data) {
+        console.log("The temperature is", data.tempf);
+      });
