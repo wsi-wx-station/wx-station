@@ -63,3 +63,6 @@ typings/
 # Ignore compiled CSS
 *.css
 *.css*
+
+# Ignore flat-file stored weather
+var/wx.json
