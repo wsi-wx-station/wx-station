@@ -4,6 +4,7 @@ var fs = require('fs').promises;
 var server = require('http').Server();
 var io = require('socket.io')(server);
 var path = require('path');
+var EventEmitter = require('events');
 // No need to load up cookies
 // var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -61,6 +62,13 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+// Set up custom event emitter
+// to wire up API data with web sockets
+
+class WxEmitter extends EventEmitter {}
+var wxEmitter = new WxEmitter();
+
+
 api.connect();
 api.on('connect', function() {
   console.log('Connected to the Ambient Weather API');
@@ -81,6 +89,7 @@ api.on('subscribed', function(ddata) {
 
 api.on('data', function(data){
   //console.log(`At ${shortDate(data.date)} - ${data.tempf}℉, wind out of the ${cardinalDirection(data.winddir)} at ${data.windspeedmph} mph`);
+  wxEmitter.emit('weather', data);
 });
 
 api.subscribe(apiKey);
@@ -89,6 +98,9 @@ io.on('connection', function(socket){
   socket.emit('news', { greet: 'Hello, world!'});
   socket.on('backactcha', function(data) {
     console.log(data);
+  });
+  wxEmitter.on('weather', function(data) {
+    socket.emit('weather', data);
   });
 });
 
