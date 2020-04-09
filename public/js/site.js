@@ -1,3 +1,13 @@
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+  .then(function(registration) {
+    console.log('Registered a service worker scoped to', registration.scope)
+  })
+  .catch(function(error) {
+    console.error('Failed to register service worker', error)
+  });
+}
+
 var socket = io.connect('http://localhost:3001');
 socket.on('news', function(data){
   console.log(data.greet);
