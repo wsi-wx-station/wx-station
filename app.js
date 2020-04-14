@@ -24,6 +24,8 @@ const api = new AWApi({
   applicationKey: process.env.AMBIENT_WEATHER_APP_KEY
 });
 
+// TODO: Look into moving this listener logic into the
+// /bin/www script; possibly run on same port as app
 // Set socket server to listen on :3001
 server.listen(3001);
 
