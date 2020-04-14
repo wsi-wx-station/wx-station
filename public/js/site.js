@@ -28,10 +28,17 @@ socket.on('weather', function(data) {
 
 });
 
+function zeroPad(num,length = 2) {
+  num = num.toString();
+  while (num.length < length) {
+    num = '0' + num;
+  }
+  return num
+}
 
 function shortDate(d) {
   d = new Date(d);
-  return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${d.getMinutes()}`;
+  return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${zeroPad(d.getMinutes())}`;
 }
 
 function cardinalDirection(deg) {
