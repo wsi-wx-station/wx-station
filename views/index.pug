@@ -1,9 +1,36 @@
 extends layout
 
 block content
-  h1 Belmont Gardens Weather
-  p.
-    At <time id="date" datetime="#{date}">#{shortDate}</time>, it is
-    <b id="tempf">#{tempf}</b>℉, with wind out of the
-    <b id="winddir" data-winddir="#{winddir}">#{cardinalDirection}</b> at
-    <b id="windspeedmph">#{windspeedmph}</b> mph.
+  header#header
+    h1 Current Observations
+    p Belmont Gardens Neighborhood, Chicago, IL
+    small Last updated <time id="date" datetime="#{date}">#{shortDate}</time>
+  main#content
+    ul#observations
+      li.temperature
+        h2 Current Temperature
+        <b id="tempf">#{tempf}</b>°
+      li.rain
+        h2 Daily Rainfall
+        <b id="dailyrain">#{dailyrainin}</b>″
+      li.wind
+        h2 Wind
+        ul
+          li.speed
+            <b id="winddir" data-winddir="#{winddir}">#{cardinalDirection}</b> at <b id="windspeedmph">#{windspeedmph}</b> mph
+          li.gust
+            <b id="windgustmph">#{windgustmph}</b> mph gust
+      li.dewpoint
+        h2 Dew Point
+        <b id="dewpoint">#{dewPoint}</b>°
+      li.humidity
+        h2 Humidity
+        <b id="humidity">#{humidity}</b>%
+      li.uv
+        h2 UV Index
+        ul
+          li.index <b id="uv-index" class="#{uv.class}">#{uv.index}</b>
+          li.risk <b id="uv-risk">#{uv.risk}</b> risk
+      li.radiation
+        h2 Solar Radiation
+        <b id="solarradiation">#{solarradiation}</b> watts/m²
