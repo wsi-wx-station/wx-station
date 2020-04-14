@@ -78,6 +78,8 @@ api.on('subscribed', function(ddata) {
   // console.log(data.devices[0].lastData);
   var data = ddata.devices[0].lastData;
   //console.log(`At ${shortDate(data.date)} - ${data.tempf}℉, wind out of the ${cardinalDirection(data.winddir)} at ${data.windspeedmph} mph`);
+  // TODO: write a function to encapsulate this logic, shared also with the
+  // api 'data' event below
   fs.writeFile('var/wx.json', JSON.stringify(data))
     .then(function(){
       console.log('Weather data written to file');
@@ -90,6 +92,13 @@ api.on('subscribed', function(ddata) {
 api.on('data', function(data){
   //console.log(`At ${shortDate(data.date)} - ${data.tempf}℉, wind out of the ${cardinalDirection(data.winddir)} at ${data.windspeedmph} mph`);
   wxEmitter.emit('weather', data);
+  fs.writeFile('var/wx.json', JSON.stringify(data))
+    .then(function(){
+      console.log('Weather data written to file');
+    })
+    .catch(function(e){
+      console.error(e);
+    });
 });
 
 api.subscribe(apiKey);
