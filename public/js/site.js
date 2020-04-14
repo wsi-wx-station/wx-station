@@ -44,6 +44,10 @@ fetch('https://api.weather.gov/gridpoints/LOT/71,75/forecast')
     document.querySelector('.temperature').appendChild(aside);
   });
 
+// TODO: Consolidate these utility functions with those on the server side;
+// decide whether these need to remain in the client, or can be handled with
+// the prepareData(); function on the server side
+
 function zeroPad(num,length = 2) {
   num = num.toString();
   while (num.length < length) {

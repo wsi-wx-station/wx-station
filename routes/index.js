@@ -3,6 +3,7 @@ var fs = require('fs').promises;
 var wx = require('../lib/wx-data')
 var router = express.Router();
 
+// TODO: Move all of these functions into a shared library
 function shortDate(d) {
   d = new Date(d);
   return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${d.getMinutes()}`;
@@ -55,8 +56,11 @@ function uvIndex(uv) {
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
+  // TODO: simplify the reading & parsing of JSON to a single line
   let wx_json = await fs.readFile('var/wx.json');
   let wx_data = JSON.parse(wx_json);
+  // TODO: remove all of this logic, which should be handled
+  // upstream, in app.js, with the prepareData(); function
   wx_data.uv = uvIndex(wx_data.uv);
   wx_data.shortDate = shortDate(wx_data.date);
   wx_data.cardinalDirection = cardinalDirection(wx_data.winddir);

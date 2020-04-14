@@ -75,6 +75,9 @@ api.on('connect', function() {
 });
 
 api.on('subscribed', function(ddata) {
+  // TODO: better prepare the weather data
+  // var prepared_data = prepareData(ddata.devices[0].lastData);
+  // fs.writeFile('var/wx.json', JSON.stringify(prepared_data))
   var data = ddata.devices[0].lastData;
   // TODO: write a function to encapsulate this logic, shared also with the
   // api 'data' event below
@@ -106,6 +109,9 @@ io.on('connection', function(socket){
     console.log(data);
   });
   wxEmitter.on('weather', function(data) {
+    // TODO: better prepare the weather data
+    // var prepared_data = prepareData(data);
+    // socket.emit('weather', prepared_data);
     socket.emit('weather', data);
   });
 });
