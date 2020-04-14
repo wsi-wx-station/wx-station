@@ -28,6 +28,22 @@ socket.on('weather', function(data) {
 
 });
 
+fetch('https://api.weather.gov/gridpoints/LOT/71,75/forecast')
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(data){
+    var aside = document.createElement('aside');
+    var forecast = document.createElement('p');
+    heading = document.createElement('h3');
+    aside.id = 'forecast';
+    heading.innerText = data.properties.periods[0].name;
+    forecast.innerText = data.properties.periods[0].detailedForecast;
+    aside.appendChild(heading);
+    aside.appendChild(forecast);
+    document.querySelector('.temperature').appendChild(aside);
+  });
+
 function zeroPad(num,length = 2) {
   num = num.toString();
   while (num.length < length) {
