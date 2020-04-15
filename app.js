@@ -4,12 +4,12 @@ const AWApi = require('ambient-weather-api');
 const createError = require('http-errors');
 const EventEmitter = require('events');
 const express = require('express');
-const fs = require('fs').promises;
 const indexRouter = require('./routes/index');
 const io = require('socket.io')();
 const logger = require('morgan');
 const path = require('path');
 const sassMiddleware = require('node-sass-middleware');
+const wx = require('./lib/wx-data');
 
 
 // Ambient Weather API Setup
@@ -71,26 +71,12 @@ api.on('subscribed', function(ddata) {
   // var prepared_data = prepareData(ddata.devices[0].lastData);
   // fs.writeFile('var/wx.json', JSON.stringify(prepared_data))
   const data = ddata.devices[0].lastData;
-  // TODO: write a function to encapsulate this logic, shared also with the
-  // api 'data' event below
-  fs.writeFile('var/wx.json', JSON.stringify(data))
-    .then(function(){
-      console.log('Weather data written to file');
-    })
-    .catch(function(e){
-      console.error(e);
-    });
+  wx.writeWeatherData('var/wx.json',data);
 });
 
 api.on('data', function(data){
   wxEmitter.emit('weather', data);
-  fs.writeFile('var/wx.json', JSON.stringify(data))
-    .then(function(){
-      console.log('Weather data written to file');
-    })
-    .catch(function(e){
-      console.error(e);
-    });
+  wx.writeWeatherData('var/wx.json',data);
 });
 
 api.subscribe(apiKey);
