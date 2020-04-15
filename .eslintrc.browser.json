@@ -38,6 +38,7 @@
     "spaced-comment": ["warn", "always"],
     "semi": ["warn", "always"],
     "semi-spacing": ["warn", {"before": false, "after": true}],
-    "prefer-template": ["off"]
+    "prefer-template": ["off"],
+    "no-var": ["off"]
   }
 }
