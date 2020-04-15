@@ -9,10 +9,10 @@ block content
     ul#observations
       li.temperature
         h2 Current Temperature
-        <b id="tempf">#{tempf}</b>°
+        div <b id="tempf">#{tempf}</b>°
       li.rain
         h2 Daily Rainfall
-        <b id="dailyrain">#{dailyrainin}</b>″
+        div <b id="dailyrain">#{dailyrainin}</b>″
       li.wind
         h2 Wind
         ul
@@ -22,15 +22,13 @@ block content
             <b id="windgustmph">#{windgustmph}</b> mph gust
       li.dewpoint
         h2 Dew Point
-        <b id="dewpoint">#{dewPoint}</b>°
+        div <b id="dewpoint">#{dewPoint}</b>°
       li.humidity
         h2 Humidity
-        <b id="humidity">#{humidity}</b>%
+        div <b id="humidity">#{humidity}</b>%
       li.uv
         h2 UV Index
-        ul
-          li.index <b id="uv-index" class="#{uv.class}">#{uv.index}</b>
-          li.risk <b id="uv-risk">#{uv.risk}</b> risk
+        div <b id="uv-index" class="#{uv.class}">#{uv.index}</b> <b id="uv-risk">#{uv.risk}</b> risk
       li.radiation
         h2 Solar Radiation
-        <b id="solarradiation">#{solarradiation}</b> watts/m²
+        div <b id="solarradiation">#{solarradiation}</b> watts/m²
