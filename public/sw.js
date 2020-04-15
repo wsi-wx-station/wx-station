@@ -1,5 +1,7 @@
+/* global clients */
+'use strict';
 // sed -i '' "s/var VERSION/const VERSION = '`git rev-parse --short HEAD`'/" sw.js
-var VERSION;
+let VERSION;
 const version = VERSION ? VERSION : mockTenMinuteVersion();
 
 // Update with all essential and supporting assets
@@ -16,7 +18,7 @@ const site_preloaded_assets = {
 };
 
 const site_cache_of = {
-  assets: `assets.${version}`,
+  assets: `assets.${ version }`,
   pages: `pages`,
   requests: `requests`
 };
@@ -40,15 +42,15 @@ addEventListener('install', function(e) {
   self.skipWaiting();
   e.waitUntil(
     caches.open(site_cache_of.assets)
-    .then(function(c) {
+      .then(function(c) {
       // non-essential/nice-to-have assets are added asynchronously
-      c.addAll(site_preloaded_assets.supporting);
-      // *synchronously* add only for essential assets and fallbacks
-      return c.addAll(site_preloaded_assets.essential);
-    })
-    .catch(function(e) {
-      console.error('Caches error:', e);
-    })
+        c.addAll(site_preloaded_assets.supporting);
+        // *synchronously* add only for essential assets and fallbacks
+        return c.addAll(site_preloaded_assets.essential);
+      })
+      .catch(function(e) {
+        console.error('Caches error:', e);
+      })
   );
 // end install event listener
 });
@@ -62,19 +64,19 @@ addEventListener('activate', function(e) {
   console.log('The service worker is activated!');
   e.waitUntil(
     caches.keys()
-    .then(function(existing_caches) {
-      return Promise.all(
-        existing_caches.map(function(existing_cache) {
-          if (!site_cache_list.includes(existing_cache)) {
-            return caches.delete(existing_cache);
-          }
-        })
-      );
-    })
-    .then(function(){
+      .then(function(existing_caches) {
+        return Promise.all(
+          existing_caches.map(function(existing_cache) {
+            if (!site_cache_list.includes(existing_cache)) {
+              return caches.delete(existing_cache);
+            }
+          })
+        );
+      })
+      .then(function(){
       // see https://developer.mozilla.org/en-US/docs/Web/API/Clients/claim
-      return clients.claim();
-    })
+        return clients.claim();
+      })
   // end waitUntil
   );
 // end activate event listener
@@ -91,26 +93,26 @@ addEventListener('fetch', function(fe) {
   if (request.headers.get('Accept').includes('text/html')) {
     fe.respondWith(
       fetch(request)
-      .then(function(fetch_response) {
-        const copy = fetch_response.clone();
-        fe.waitUntil(
-          caches.open(site_cache_of.pages)
-          .then(function(this_cache) {
-            this_cache.put(request,copy);
-          })
-        );
-        return fetch_response;
-      })
-      .catch(function(error) {
-        return caches.match(request)
-        .then(function(cached_response) {
-          if (cached_response) {
-            return cached_response;
-          }
-          return caches.match(site_offline_path);
-        });
+        .then(function(fetch_response) {
+          const copy = fetch_response.clone();
+          fe.waitUntil(
+            caches.open(site_cache_of.pages)
+              .then(function(this_cache) {
+                this_cache.put(request, copy);
+              })
+          );
+          return fetch_response;
+        })
+        .catch(function() {
+          return caches.match(request)
+            .then(function(cached_response) {
+              if (cached_response) {
+                return cached_response;
+              }
+              return caches.match(site_offline_path);
+            });
 
-      })
+        })
     // end respondWith
     );
     return;
@@ -120,31 +122,31 @@ addEventListener('fetch', function(fe) {
   if (!request.url.includes(location.hostname)) {
     fe.respondWith(
       caches.match(request)
-      .then(function(cached_response) {
-        if (cached_response) {
-          fe.waitUntil(
-            fetch(request)
-            .then(function(fetch_response){
-              caches.open(site_cache_of.requests)
-              .then(function(this_cache){
-                return this_cache.put(request, fetch_response);
-              });
-            })
-          );
-          return cached_response;
-        }
-        return fetch(request)
-        .then(function(fetch_response) {
-          const copy = fetch_response.clone();
-          fe.waitUntil(
-            caches.open(site_cache_of.requests)
-            .then(function(this_cache) {
-              this_cache.put(request, copy);
-            })
-          );
-          return fetch_response;
-        });
-      })
+        .then(function(cached_response) {
+          if (cached_response) {
+            fe.waitUntil(
+              fetch(request)
+                .then(function(fetch_response){
+                  caches.open(site_cache_of.requests)
+                    .then(function(this_cache){
+                      return this_cache.put(request, fetch_response);
+                    });
+                })
+            );
+            return cached_response;
+          }
+          return fetch(request)
+            .then(function(fetch_response) {
+              const copy = fetch_response.clone();
+              fe.waitUntil(
+                caches.open(site_cache_of.requests)
+                  .then(function(this_cache) {
+                    this_cache.put(request, copy);
+                  })
+              );
+              return fetch_response;
+            });
+        })
     // end respondWith
     );
     return;
@@ -159,11 +161,11 @@ addEventListener('fetch', function(fe) {
           return cached_response;
         }
         return fetch(request)
-        .catch(function(error) {
-          return caches.match(site_offline_path);
-        })
+          .catch(function() {
+            return caches.match(site_offline_path);
+          });
       }
-    )
+      )
   );
 
 // end fetch event listener
@@ -173,17 +175,17 @@ addEventListener('fetch', function(fe) {
 // Helper and utility functions
 
 function mockTenMinuteVersion() {
-  var d = new Date();
-  var year = d.getFullYear().toString();
-  var month = (d.getMonth() + 1).toString();
-  var date = d.getDate().toString();
-  var mins = new Date().getMinutes();
+  let d = new Date();
+  let year = d.getFullYear().toString();
+  let month = (d.getMonth() + 1).toString();
+  let date = d.getDate().toString();
+  let mins = new Date().getMinutes();
   mins = Math.floor(mins/10).toString();
-  return year + '.' + zeroPad(month) + '.' + zeroPad(date) + '-' + zeroPad(mins);
-  function zeroPad(num,n = 2) {
+  return `${ year }.${ zeroPad(month) }.${ zeroPad(date) }-${ zeroPad(mins) }`;
+  function zeroPad(num, n = 2) {
     num = num.toString();
     while (num.length < n) {
-      num = '0' + num;
+      num = `0${ num }`;
     }
     return num;
   }

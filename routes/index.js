@@ -1,16 +1,18 @@
-var express = require('express');
-var fs = require('fs').promises;
-var wx = require('../lib/wx-data')
-var router = express.Router();
+'use strict';
+
+const express = require('express');
+const fs = require('fs').promises;
+// const wx = require('../lib/wx-data')
+const router = express.Router();
 
 // TODO: Move all of these functions into a shared library
 function shortDate(d) {
   d = new Date(d);
-  return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${d.getMinutes()}`;
+  return `${ d.getMonth()+1 }/${ d.getDate() } ${ d.getHours() }:${ d.getMinutes() }`;
 }
 
 function cardinalDirection(deg) {
-  var cardinals = [
+  const cardinals = [
     'N',
     'NNE',
     'NE',
@@ -33,32 +35,32 @@ function cardinalDirection(deg) {
 }
 
 function uvIndex(uv) {
-  var risk;
+  let risk;
   switch(uv) {
-    case (uv > 10):
-      risk = "Extreme";
-      break;
-    case (uv > 7):
-      risk = "Very High";
-      break;
-    case (uv > 5):
-      risk = "High";
-      break;
-    case (uv > 2):
-      risk = "Moderate";
-      break;
-    default:
-      risk = "Low";
+  case (uv > 10):
+    risk = "Extreme";
+    break;
+  case (uv > 7):
+    risk = "Very High";
+    break;
+  case (uv > 5):
+    risk = "High";
+    break;
+  case (uv > 2):
+    risk = "Moderate";
+    break;
+  default:
+    risk = "Low";
   }
   return { index: uv, risk: risk, class: risk[0].toLowerCase() };
 }
 
 
 /* GET home page. */
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
   // TODO: simplify the reading & parsing of JSON to a single line
-  let wx_json = await fs.readFile('var/wx.json');
-  let wx_data = JSON.parse(wx_json);
+  const wx_json = await fs.readFile('var/wx.json');
+  const wx_data = JSON.parse(wx_json);
   // TODO: remove all of this logic, which should be handled
   // upstream, in app.js, with the prepareData(); function
   wx_data.uv = uvIndex(wx_data.uv);
