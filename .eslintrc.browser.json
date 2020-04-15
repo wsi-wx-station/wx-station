@@ -37,6 +37,7 @@
     "newline-per-chained-call": ["warn", { "ignoreChainWithDepth": 2 }],
     "spaced-comment": ["warn", "always"],
     "semi": ["warn", "always"],
-    "semi-spacing": ["warn", {"before": false, "after": true}]
+    "semi-spacing": ["warn", {"before": false, "after": true}],
+    "prefer-template": ["off"]
   }
 }
