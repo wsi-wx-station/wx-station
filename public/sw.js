@@ -1,3 +1,5 @@
+/* global clients */
+'use strict';
 // sed -i '' "s/var VERSION/const VERSION = '`git rev-parse --short HEAD`'/" sw.js
 let VERSION;
 const version = VERSION ? VERSION : mockTenMinuteVersion();
@@ -101,7 +103,7 @@ addEventListener('fetch', function(fe) {
           );
           return fetch_response;
         })
-        .catch(function(error) {
+        .catch(function() {
           return caches.match(request)
             .then(function(cached_response) {
               if (cached_response) {
@@ -159,7 +161,7 @@ addEventListener('fetch', function(fe) {
           return cached_response;
         }
         return fetch(request)
-          .catch(function(error) {
+          .catch(function() {
             return caches.match(site_offline_path);
           });
       }
