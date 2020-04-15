@@ -66,6 +66,7 @@ api.on('connect', function() {
   console.log('Connected to the Ambient Weather API');
 });
 
+api.subscribe(apiKey);
 api.on('subscribed', function(ddata) {
   // TODO: better prepare the weather data
   // var prepared_data = prepareData(ddata.devices[0].lastData);
@@ -78,8 +79,6 @@ api.on('data', function(data){
   wxEmitter.emit('weather', data);
   wx.writeWeatherData('var/wx.json',data);
 });
-
-api.subscribe(apiKey);
 
 io.on('connection', function(socket){
   socket.emit('news', { greet: 'Hello, world!'});
