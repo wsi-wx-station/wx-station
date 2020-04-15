@@ -1,20 +1,20 @@
 'use strict';
 
-var createError = require('http-errors');
-var express = require('express');
-var fs = require('fs').promises;
-var server = require('http').Server();
-var io = require('socket.io')(server);
-var path = require('path');
-var EventEmitter = require('events');
+const createError = require('http-errors');
+const express = require('express');
+const fs = require('fs').promises;
+const server = require('http').Server();
+const io = require('socket.io')(server);
+const path = require('path');
+const EventEmitter = require('events');
 // No need to load up cookies
-// var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var sassMiddleware = require('node-sass-middleware');
+// const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const sassMiddleware = require('node-sass-middleware');
 
-var indexRouter = require('./routes/index');
+const indexRouter = require('./routes/index');
 
-var app = express();
+const app = express();
 
 // Ambient Weather API
 const AWApi = require('ambient-weather-api');
@@ -70,7 +70,7 @@ app.use(function(err, req, res) {
 // to wire up API data with web sockets
 
 class WxEmitter extends EventEmitter {}
-var wxEmitter = new WxEmitter();
+const wxEmitter = new WxEmitter();
 
 
 api.connect();
@@ -82,7 +82,7 @@ api.on('subscribed', function(ddata) {
   // TODO: better prepare the weather data
   // var prepared_data = prepareData(ddata.devices[0].lastData);
   // fs.writeFile('var/wx.json', JSON.stringify(prepared_data))
-  var data = ddata.devices[0].lastData;
+  const data = ddata.devices[0].lastData;
   // TODO: write a function to encapsulate this logic, shared also with the
   // api 'data' event below
   fs.writeFile('var/wx.json', JSON.stringify(data))
@@ -114,7 +114,7 @@ io.on('connection', function(socket){
   });
   wxEmitter.on('weather', function(data) {
     // TODO: better prepare the weather data
-    // var prepared_data = prepareData(data);
+    // const prepared_data = prepareData(data);
     // socket.emit('weather', prepared_data);
     socket.emit('weather', data);
   });
