@@ -48,7 +48,10 @@ fetch('https://api.weather.gov/gridpoints/LOT/71,75/forecast')
 // decide whether these need to remain in the client, or can be handled with
 // the prepareData(); function on the server side
 
-function zeroPad(num,length = 2) {
+function zeroPad(num,length) {
+  if (typeof length === 'undefined') {
+    var length = 2;
+  }
   num = num.toString();
   while (num.length < length) {
     num = '0' + num;
