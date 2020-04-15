@@ -62,7 +62,7 @@ function zeroPad(num,length) {
 function shortDate(d) {
   d = new Date(d);
   // return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${zeroPad(d.getMinutes())}`;
-  return (d.getMonth() + 1) + '/' + d.getDate() + ' ' d.getHours() + ':' + zeroPad(d.getMinutes());
+  return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + zeroPad(d.getMinutes());
 }
 
 function cardinalDirection(deg) {
