@@ -1,9 +1,9 @@
 'use strict';
 
-var express = require('express');
-var fs = require('fs').promises;
+const express = require('express');
+const fs = require('fs').promises;
 // const wx = require('../lib/wx-data')
-var router = express.Router();
+const router = express.Router();
 
 // TODO: Move all of these functions into a shared library
 function shortDate(d) {
@@ -12,7 +12,7 @@ function shortDate(d) {
 }
 
 function cardinalDirection(deg) {
-  var cardinals = [
+  const cardinals = [
     'N',
     'NNE',
     'NE',
@@ -35,7 +35,7 @@ function cardinalDirection(deg) {
 }
 
 function uvIndex(uv) {
-  var risk;
+  let risk;
   switch(uv) {
     case (uv > 10):
       risk = "Extreme";
@@ -59,8 +59,8 @@ function uvIndex(uv) {
 /* GET home page. */
 router.get('/', async function(req, res) {
   // TODO: simplify the reading & parsing of JSON to a single line
-  let wx_json = await fs.readFile('var/wx.json');
-  let wx_data = JSON.parse(wx_json);
+  const wx_json = await fs.readFile('var/wx.json');
+  const wx_data = JSON.parse(wx_json);
   // TODO: remove all of this logic, which should be handled
   // upstream, in app.js, with the prepareData(); function
   wx_data.uv = uvIndex(wx_data.uv);
