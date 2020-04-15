@@ -13,10 +13,6 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-socket.on('news', function(data){
-  console.log(data.greet);
-  socket.emit('backactcha', { dude: "I am socketed up, brah"});
-});
 socket.on('weather', function(data) {
   var date = document.querySelector('#date');
   var tempf = document.querySelector('#tempf');

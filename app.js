@@ -81,10 +81,6 @@ api.on('data', function(data){
 });
 
 io.on('connection', function(socket){
-  socket.emit('news', { greet: 'Hello, world!'});
-  socket.on('backactcha', function(data) {
-    console.log(data);
-  });
   wxEmitter.on('weather', function(data) {
     // TODO: better prepare the weather data
     // const prepared_data = prepareData(data);
