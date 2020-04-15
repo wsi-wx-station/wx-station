@@ -3,8 +3,7 @@
 const createError = require('http-errors');
 const express = require('express');
 const fs = require('fs').promises;
-const server = require('http').Server();
-const io = require('socket.io')(server);
+const io = require('socket.io')();
 const path = require('path');
 const EventEmitter = require('events');
 // No need to load up cookies
@@ -25,11 +24,6 @@ const api = new AWApi({
   apiKey: apiKey,
   applicationKey: process.env.AMBIENT_WEATHER_APP_KEY
 });
-
-// TODO: Look into moving this listener logic into the
-// /bin/www script; possibly run on same port as app
-// Set socket server to listen on :3001
-server.listen(3001);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -120,4 +114,4 @@ io.on('connection', function(socket){
   });
 });
 
-module.exports = app;
+module.exports = {app, io};

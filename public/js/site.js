@@ -1,7 +1,7 @@
 /* global io */
 'use strict';
 
-var socket = io.connect('http://localhost:3001');
+var socket = io.connect('/');
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')

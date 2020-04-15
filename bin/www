@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-const app = require('../app');
+const {app, io} = require('../app');
 const debug = require('debug')('wx-station:server');
 const http = require('http');
 
@@ -20,6 +20,8 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
+// Also attach socket.io to the selfsame server
+io.attach(server);
 
 /**
  * Listen on provided port, on all network interfaces.
