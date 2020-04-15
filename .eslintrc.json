@@ -23,7 +23,7 @@
     "eqeqeq": ["warn", "always"],
     "no-multi-spaces": ["warn", { "ignoreEOLComments": true, "exceptions": { "Property": true } }],
     "no-sequences": "error",
-    "require-await": "error",
+    "require-await": "warn",
     "vars-on-top": "error",
     "yoda": "error",
     "strict": ["error", "global"],
