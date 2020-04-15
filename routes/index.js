@@ -37,20 +37,20 @@ function cardinalDirection(deg) {
 function uvIndex(uv) {
   let risk;
   switch(uv) {
-    case (uv > 10):
-      risk = "Extreme";
-      break;
-    case (uv > 7):
-      risk = "Very High";
-      break;
-    case (uv > 5):
-      risk = "High";
-      break;
-    case (uv > 2):
-      risk = "Moderate";
-      break;
-    default:
-      risk = "Low";
+  case (uv > 10):
+    risk = "Extreme";
+    break;
+  case (uv > 7):
+    risk = "Very High";
+    break;
+  case (uv > 5):
+    risk = "High";
+    break;
+  case (uv > 2):
+    risk = "Moderate";
+    break;
+  default:
+    risk = "Low";
   }
   return { index: uv, risk: risk, class: risk[0].toLowerCase() };
 }
