@@ -14,18 +14,21 @@ if ('serviceWorker' in navigator) {
 }
 
 socket.on('weather', function(data) {
-  var date = document.querySelector('#date');
-  var tempf = document.querySelector('#tempf');
-  var winddir = document.querySelector('#winddir');
-  var windspeedmph = document.querySelector('#windspeedmph');
-
-  date.innerText = shortDate(data.date);
-  date.dateTime = data.date;
-  tempf.innerText = data.tempf;
-  winddir.innerText = cardinalDirection(data.winddir);
-  winddir.dataset.winddir = data.winddir;
-  windspeedmph.innerText = data.windspeedmph;
-
+  var simple_properties = ['date','tempf','dailyrainin','windgustmph','windspeedmph','dewPoint','humidity','solarradiation'];
+  var wind = document.querySelector('#winddir');
+  var uv = document.querySelector('#uv');
+  var uv_risk = document.querySelector('#uv-risk');
+  // Run through and roughly update the innerText of all simple elements
+  for (var i = 0; i < simple_properties.length; i++) {
+    document.querySelector('#'+simple_properties[i]).innerText = data[simple_properties[i]];
+  }
+  // Handle the more complicated elements manually
+  // TODO: shortDate() should return an object with the short date and timestamp
+  wind.innerText = data.winddir.direction;
+  wind.dataset.winddir = data.winddir.deg;
+  uv.innerText = data.uv.index;
+  uv.className = data.uv.class;
+  uv_risk.innerText = data.uv.risk;
 });
 
 fetch('https://api.weather.gov/gridpoints/LOT/71,75/forecast')
