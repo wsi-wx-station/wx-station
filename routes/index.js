@@ -11,7 +11,7 @@ router.get('/', async function(req, res) {
   try {
     const wx_json = await fs.readFile('var/wx.json');
     const wx_data = wx.prepareWeatherData(JSON.parse(wx_json), wx.WHITELIST);
-    console.log(JSON.stringify(wx_data));
+    // console.log(JSON.stringify(wx_data));
     res.render('index', wx_data);
   } catch(e) {
     console.error(e);
