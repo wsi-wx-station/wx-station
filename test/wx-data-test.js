@@ -21,10 +21,12 @@ describe('Write weather data to a file', function() {
 
 describe('Prepared weather data', function() {
   let result = wx.prepareWeatherData(JSON.parse(MOCK_API_DATA), wx.WHITELIST);
-  it('should have the same properties as the WHITELIST', function() {
+  it('should have the same properties from the API data as the WHITELIST', function() {
     const properties = [];
     for (let key in result) {
-      properties.push(key);
+      if (key[0] !== "_") { // ignore custom properties
+        properties.push(key);
+      }
     }
     assert.deepStrictEqual(wx.WHITELIST, properties);
   });
@@ -36,12 +38,12 @@ describe('Prepared weather data', function() {
     assert.equal(result.solarradiation, 449);
   });
   it('should return a properly formatted short date', function() {
-    assert.equal(result.date, '4/19 12:43');
+    assert.equal(result._date.short, '4/19 12:43');
   });
   it('should return a small object for uv values', function() {
-    assert.deepStrictEqual(result.uv, { class: 'v', index: 8, risk: 'Very High' });
+    assert.deepStrictEqual(result._uv, { class: 'v', index: 8, risk: 'Very High' });
   });
   it('should return a small object for wind direction', function() {
-    assert.deepStrictEqual(result.winddir, { deg: 287, direction: 'WNW' });
+    assert.deepStrictEqual(result._wind, { deg: 287, direction: 'WNW' });
   });
 });
