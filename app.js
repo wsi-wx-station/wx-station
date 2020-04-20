@@ -68,23 +68,18 @@ api.on('connect', function() {
 
 api.subscribe(apiKey);
 api.on('subscribed', function(ddata) {
-  // TODO: better prepare the weather data
-  // var prepared_data = prepareData(ddata.devices[0].lastData);
-  // fs.writeFile('var/wx.json', JSON.stringify(prepared_data))
   const data = ddata.devices[0].lastData;
-  wx.writeWeatherData('var/wx.json',data);
+  wx.writeWeatherData('var/wx.json', data);
 });
 
 api.on('data', function(data){
-  wxEmitter.emit('weather', data);
-  wx.writeWeatherData('var/wx.json',data);
+  let prepared_data = wx.prepareWeatherData(data, wx.WHITELIST);
+  wxEmitter.emit('weather', prepared_data);
+  wx.writeWeatherData('var/wx.json', data);
 });
 
 io.on('connection', function(socket){
   wxEmitter.on('weather', function(data) {
-    // TODO: better prepare the weather data
-    // const prepared_data = prepareData(data);
-    // socket.emit('weather', prepared_data);
     socket.emit('weather', data);
   });
 });
