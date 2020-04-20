@@ -20,7 +20,7 @@ describe('Write weather data to a file', function() {
 });
 
 describe('Prepared weather data', function() {
-  let result = wx.prepareWeatherData(MOCK_API_DATA, wx.WHITELIST);
+  let result = wx.prepareWeatherData(JSON.parse(MOCK_API_DATA), wx.WHITELIST);
   it('should have the same properties as the WHITELIST', function() {
     const properties = [];
     for (let key in result) {
