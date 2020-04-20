@@ -17,7 +17,7 @@ block content
         h2 Wind
         ul
           li.speed
-            <b id="winddir" data-winddir="#{winddir.deg}">#{winddir.direction}</b> at <b id="windspeedmph">#{windspeedmph}</b> mph
+            <b id="winddir" data-winddir="#{_wind.deg}">#{_wind.direction}</b> at <b id="windspeedmph">#{windspeedmph}</b> mph
           li.gust
             <b id="windgustmph">#{windgustmph}</b> mph gust
       li.dewpoint
@@ -28,7 +28,7 @@ block content
         div <b id="humidity">#{humidity}</b>%
       li.uv
         h2 UV Index
-        div <b id="uv" class="#{uv.class}">#{uv.index}</b> <b id="uv-risk">#{uv.risk}</b> risk
+        div <b id="uv" class="#{_uv.class}">#{_uv.index}</b> <b id="uv-risk">#{_uv.risk}</b> risk
       li.radiation
         h2 Solar Radiation
         div <b id="solarradiation">#{solarradiation}</b> watts/m²

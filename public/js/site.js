@@ -24,11 +24,11 @@ socket.on('weather', function(data) {
   }
   // Handle the more complicated elements manually
   // TODO: shortDate() should return an object with the short date and timestamp
-  wind.innerText = data.winddir.direction;
-  wind.dataset.winddir = data.winddir.deg;
-  uv.innerText = data.uv.index;
-  uv.className = data.uv.class;
-  uv_risk.innerText = data.uv.risk;
+  wind.innerText = data._wind.direction;
+  wind.dataset.winddir = data._wind.deg;
+  uv.innerText = data._uv.index;
+  uv.className = data._uv.class;
+  uv_risk.innerText = data._uv.risk;
 });
 
 fetch('https://api.weather.gov/gridpoints/LOT/71,75/forecast')
