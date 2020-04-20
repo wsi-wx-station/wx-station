@@ -2,71 +2,20 @@
 
 const express = require('express');
 const fs = require('fs').promises;
-// const wx = require('../lib/wx-data')
+const wx = require('../lib/wx-data')
 const router = express.Router();
-
-// TODO: Move all of these functions into a shared library
-function shortDate(d) {
-  d = new Date(d);
-  return `${ d.getMonth()+1 }/${ d.getDate() } ${ d.getHours() }:${ d.getMinutes() }`;
-}
-
-function cardinalDirection(deg) {
-  const cardinals = [
-    'N',
-    'NNE',
-    'NE',
-    'ENE',
-    'E',
-    'ESE',
-    'SE',
-    'SSE',
-    'S',
-    'SSW',
-    'SW',
-    'WSW',
-    'W',
-    'WNW',
-    'NW',
-    'NNW',
-    'N'
-  ];
-  return cardinals[Math.round(deg / 22.5)];
-}
-
-function uvIndex(uv) {
-  let risk;
-  switch(uv) {
-  case (uv > 10):
-    risk = "Extreme";
-    break;
-  case (uv > 7):
-    risk = "Very High";
-    break;
-  case (uv > 5):
-    risk = "High";
-    break;
-  case (uv > 2):
-    risk = "Moderate";
-    break;
-  default:
-    risk = "Low";
-  }
-  return { index: uv, risk: risk, class: risk[0].toLowerCase() };
-}
-
 
 /* GET home page. */
 router.get('/', async function(req, res) {
   // TODO: simplify the reading & parsing of JSON to a single line
-  const wx_json = await fs.readFile('var/wx.json');
-  const wx_data = JSON.parse(wx_json);
-  // TODO: remove all of this logic, which should be handled
-  // upstream, in app.js, with the prepareData(); function
-  wx_data.uv = uvIndex(wx_data.uv);
-  wx_data.shortDate = shortDate(wx_data.date);
-  wx_data.cardinalDirection = cardinalDirection(wx_data.winddir);
-  res.render('index', wx_data);
+  try {
+    const wx_json = await fs.readFile('var/wx.json');
+    const wx_data = wx.prepareWeatherData(JSON.parse(wx_json), wx.WHITELIST);
+    console.log(JSON.stringify(wx_data));
+    res.render('index', wx_data);
+  } catch(e) {
+    console.error(e);
+  };
 });
 
 module.exports = router;
