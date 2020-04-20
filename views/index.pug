@@ -4,7 +4,7 @@ block content
   header#header
     h1 Current Observations
     p Belmont Gardens Neighborhood, Chicago, IL
-    small Last updated <time id="date" datetime="">#{date}</time>
+    small Last updated <time id="date" datetime="#{_date.timestamp}">#{_date.short}</time>
   main#content
     ul#observations
       li.temperature

@@ -14,7 +14,8 @@ if ('serviceWorker' in navigator) {
 }
 
 socket.on('weather', function(data) {
-  var simple_properties = ['date','tempf','dailyrainin','windgustmph','windspeedmph','dewPoint','humidity','solarradiation'];
+  var simple_properties = ['tempf','dailyrainin','windgustmph','windspeedmph','dewPoint','humidity','solarradiation'];
+  var date = document.querySelector('#date');
   var wind = document.querySelector('#winddir');
   var uv = document.querySelector('#uv');
   var uv_risk = document.querySelector('#uv-risk');
@@ -24,6 +25,8 @@ socket.on('weather', function(data) {
   }
   // Handle the more complicated elements manually
   // TODO: shortDate() should return an object with the short date and timestamp
+  date.innerText = data._date.short;
+  date.timestamp = data._date.timestamp;
   wind.innerText = data._wind.direction;
   wind.dataset.winddir = data._wind.deg;
   uv.innerText = data._uv.index;
