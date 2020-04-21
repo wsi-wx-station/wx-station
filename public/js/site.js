@@ -35,7 +35,7 @@ socket.on('weather', function(data) {
   uv_risk.innerText = data._uv.risk;
 });
 
-fetchData(forecast_url,updateForecast);
+fetchData(forecast_url,createForecast);
 
 // Check for an updated forecast every five minutes
 setInterval(function() {
@@ -50,7 +50,7 @@ function fetchData(url,callback) {
     .then(callback);
 }
 
-function updateForecast(data) {
+function createForecast(data) {
   var aside = document.createElement('aside');
   var forecast = document.createElement('p');
   var heading = document.createElement('h3');
@@ -60,4 +60,10 @@ function updateForecast(data) {
   aside.appendChild(heading);
   aside.appendChild(forecast);
   document.querySelector('.temperature').appendChild(aside);
+}
+
+function updateForecast(data) {
+  var aside = document.querySelector('#aside');
+  aside.querySelector('h3').innerText = data.properties.periods[0].name;
+  aside.querySelector('p').innerText = data.properties.periods[0].detailedForecast;
 }
