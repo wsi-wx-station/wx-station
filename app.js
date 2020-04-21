@@ -4,6 +4,7 @@ const AWApi = require('ambient-weather-api');
 const createError = require('http-errors');
 const EventEmitter = require('events');
 const express = require('express');
+const fs = require('fs').promises;
 const indexRouter = require('./routes/index');
 const io = require('socket.io')();
 const logger = require('morgan');
@@ -79,6 +80,14 @@ api.on('data', function(data){
 });
 
 io.on('connection', function(socket){
+  // TODO: this data is intended for browsers that *re*-connect. Need to
+  // investigate whether this is the best way to handle that case.
+  fs.readFile('var/wx.json')
+    .then(function(data) {
+      const wx_data = wx.prepareWeatherData(JSON.parse(data), wx.WHITELIST);
+      console.log('trying to send new data', wx_data);
+      socket.emit('weather', wx_data);
+    });
   wxEmitter.on('weather', function(data) {
     socket.emit('weather', data);
   });
