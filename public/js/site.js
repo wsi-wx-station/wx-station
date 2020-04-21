@@ -2,6 +2,7 @@
 'use strict';
 
 var socket = io.connect('/');
+var forecast_url = 'https://api.weather.gov/gridpoints/LOT/71,75/forecast';
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
@@ -34,18 +35,29 @@ socket.on('weather', function(data) {
   uv_risk.innerText = data._uv.risk;
 });
 
-fetch('https://api.weather.gov/gridpoints/LOT/71,75/forecast')
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(data){
-    var aside = document.createElement('aside');
-    var forecast = document.createElement('p');
-    var heading = document.createElement('h3');
-    aside.id = 'forecast';
-    heading.innerText = data.properties.periods[0].name;
-    forecast.innerText = data.properties.periods[0].detailedForecast;
-    aside.appendChild(heading);
-    aside.appendChild(forecast);
-    document.querySelector('.temperature').appendChild(aside);
-  });
+fetchData(forecast_url,updateForecast);
+
+// Check for an updated forecast every five minutes
+setInterval(function() {
+  fetchData(forecast_url,updateForecast);
+}, 300000);
+
+function fetchData(url,callback) {
+  fetch(url)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(callback);
+}
+
+function updateForecast(data) {
+  var aside = document.createElement('aside');
+  var forecast = document.createElement('p');
+  var heading = document.createElement('h3');
+  aside.id = 'forecast';
+  heading.innerText = data.properties.periods[0].name;
+  forecast.innerText = data.properties.periods[0].detailedForecast;
+  aside.appendChild(heading);
+  aside.appendChild(forecast);
+  document.querySelector('.temperature').appendChild(aside);
+}
