@@ -85,7 +85,6 @@ io.on('connection', function(socket){
   fs.readFile('var/wx.json')
     .then(function(data) {
       const wx_data = wx.prepareWeatherData(JSON.parse(data), wx.WHITELIST);
-      console.log('trying to send new data', wx_data);
       socket.emit('weather', wx_data);
     });
   wxEmitter.on('weather', function(data) {
