@@ -74,13 +74,12 @@ api.on('subscribed', function(ddata) {
 });
 
 api.on('data', function(data){
-  // TODO: Figure out why `data` is getting modified by wx.prepareWeatherData;
-  // that's why the call to write the data appears first now
-  // console.log('data at the start of api.on', data);
-  wx.writeWeatherData('var/wx.json', data);
-  const prepared_data = wx.prepareWeatherData(data, wx.WHITELIST);
+  const raw_data = {};
+  Object.freeze(data); // freeze the original data from the API
+  Object.assign(raw_data, data); // make a clone of the data for manipulation
+  const prepared_data = wx.prepareWeatherData(raw_data, wx.WHITELIST);
   wxEmitter.emit('weather', prepared_data);
-  // console.log('data at the end of api.on', data);
+  wx.writeWeatherData('var/wx.json', data);
 });
 
 io.on('connection', function(socket){
