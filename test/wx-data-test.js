@@ -38,7 +38,7 @@ describe('Prepared weather data', function() {
     assert.equal(result.solarradiation, 449);
   });
   it('should return a properly formatted short date', function() {
-    assert.equal(result._date.short, '4/19 12:43 am');
+    assert.equal(result._date.short, '4/19 12:43 pm');
   });
   it('should return a small object for uv values', function() {
     assert.deepStrictEqual(result._uv, { class: 'v', index: 8, risk: 'Very High' });
