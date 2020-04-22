@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @file An ExpressJS app to capture and display Ambient Weather API data.
+* @author Karl Stolley &lt;karl.stolley@gmail.com>
+* @copyright Karl Stolley
+* @license
+* Copyright 2020 by Karl Stolley
+*
+* Permission to use, copy, modify, and/or distribute this software for any purpose with or without
+* fee is hereby granted, provided that the above copyright notice and this permission notice appear
+* in all copies.
+*
+* THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+* SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
+* AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+* WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+* NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+* OF THIS SOFTWARE.
+*/
+
+'use strict';
+
+const AWApi = require('ambient-weather-api');
+const createError = require('http-errors');
+const EventEmitter = require('events');
+const express = require('express');
+const fs = require('fs').promises;
+const indexRouter = require('./routes/index');
+const io = require('socket.io')();
+const logger = require('morgan');
+const path = require('path');
+const sassMiddleware = require('node-sass-middleware');
+const wx = require('./lib/wx-data');
+
+
+// Ambient Weather API Setup
+const apiKey = process.env.AMBIENT_WEATHER_USER_KEY;
+const api = new AWApi({
+  apiKey: apiKey,
+  applicationKey: process.env.AMBIENT_WEATHER_APP_KEY
+});
+
+/** Custom weather-event emitter that connects the API with web sockets.
+* @class WxEmitter
+* @extends EventEmitter
+*/
+class WxEmitter extends EventEmitter {}
+/** Instance of WxEmitter
+* @const {WxEmitter}
+*/
+const wxEmitter = new WxEmitter();
+
+const app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(sassMiddleware({
+  src: path.join(__dirname, 'public'),
+  dest: path.join(__dirname, 'public'),
+  indentedSyntax: false, // true = .sass and false = .scss
+  sourceMap: true,
+  precision: 9
+}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', indexRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+
+api.connect();
+api.on('connect', function() {
+  console.log('Connected to the Ambient Weather API');
+});
+
+api.subscribe(apiKey);
+api.on('subscribed', function(ddata) {
+  const data = ddata.devices[0].lastData;
+  wx.writeWeatherData('var/wx.json', data);
+});
+
+api.on('data', function(data){
+  const raw_data = {};
+  Object.freeze(data); // freeze the original data from the API
+  Object.assign(raw_data, data); // make a clone of the data for manipulation
+  const prepared_data = wx.prepareWeatherData(raw_data, wx.WHITELIST);
+  wxEmitter.emit('weather', prepared_data);
+  wx.writeWeatherData('var/wx.json', data);
+});
+
+io.on('connection', function(socket){
+  // TODO: this data is intended for browsers that *re*-connect. Need to
+  // investigate whether this is the best way to handle that case.
+  fs.readFile('var/wx.json')
+    .then(function(data) {
+      const wx_data = wx.prepareWeatherData(JSON.parse(data), wx.WHITELIST);
+      socket.emit('weather', wx_data);
+    });
+  wxEmitter.on('weather', function(data) {
+    socket.emit('weather', data);
+  });
+});
+
+module.exports = {app, io};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-lib_wx-data.html">lib/wx-data</a></li></ul><h3>Classes</h3><ul><li><a href="WxEmitter.html">WxEmitter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#wxEmitter">wxEmitter</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Apr 22 2020 16:03:30 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
