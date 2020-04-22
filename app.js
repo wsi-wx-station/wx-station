@@ -1,3 +1,21 @@
+/** @file An ExpressJS app to capture and display Ambient Weather API data.
+* @author Karl Stolley <karl.stolley@gmail.com>
+* @copyright Karl Stolley
+* @license
+* Copyright 2020 by Karl Stolley
+*
+* Permission to use, copy, modify, and/or distribute this software for any purpose with or without
+* fee is hereby granted, provided that the above copyright notice and this permission notice appear
+* in all copies.
+*
+* THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+* SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
+* AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+* WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+* NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+* OF THIS SOFTWARE.
+*/
+
 'use strict';
 
 const AWApi = require('ambient-weather-api');
@@ -20,9 +38,14 @@ const api = new AWApi({
   applicationKey: process.env.AMBIENT_WEATHER_APP_KEY
 });
 
-// Set up custom weather event emitter
-// to wire up API data with web sockets
+/** Custom weather-event emitter that connects the API with web sockets.
+* @class WxEmitter
+* @extends EventEmitter
+*/
 class WxEmitter extends EventEmitter {}
+/** Instance of WxEmitter
+* @const {WxEmitter}
+*/
 const wxEmitter = new WxEmitter();
 
 const app = express();
