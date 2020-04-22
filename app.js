@@ -86,6 +86,12 @@ app.use(function(err, req, res, next) {
 
 
 api.connect();
+
+// Fire the connect command every ten minutes to ensure API remains connected...
+setInterval(function(api){
+  api.connect();
+}, 600000, api);
+
 api.on('connect', function() {
   console.log('Connected to the Ambient Weather API');
 });
