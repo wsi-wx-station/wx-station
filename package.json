@@ -4,8 +4,10 @@
   "private": true,
   "description": "Weather station HUD and public API",
   "scripts": {
+    "docs": "rm -rf docs/*; jsdoc -p -c ./jsdoc.conf.json -r ./",
     "dstart": "DEBUG=wx-station:* ./bin/www",
     "start": "node ./bin/www",
+    "servedocs": "http-server ./docs",
     "test": "mocha"
   },
   "repository": {
