@@ -87,13 +87,19 @@ app.use(function(err, req, res, next) {
 
 api.connect();
 
-// Fire the connect command every ten minutes to ensure API remains connected...
-setInterval(function(api){
-  api.connect();
+// Reconnect every 10 minutes
+setInterval(function(aw_api){
+  aw_api.disconnect();
+  aw_api.connect();
+  aw_api.subscribe(apiKey);
 }, 600000, api);
 
 api.on('connect', function() {
   console.log('Connected to the Ambient Weather API');
+});
+
+api.on('disconnect', function() {
+  console.log('Disconnected from the Ambient Weather API');
 });
 
 api.subscribe(apiKey);
